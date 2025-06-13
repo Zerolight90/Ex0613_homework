@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+    <select id="search" resultType="emp.vo.EmpVO" parameterType="Map">
+        SELECT e.empno, e.ename, DATE_FORMAT(e.hiredate, '%Y-%m-%d') AS hiredate, e.sal,
+        (SELECT d.dname FROM dept d WHERE d.deptno = e.deptno) AS dname
+        FROM emp e
+        <where>
+            e.hiredate between #{startDate} AND #{endDate}
+        </where>
+        ORDER BY e.hiredate
+    </select>
+</mapper>
