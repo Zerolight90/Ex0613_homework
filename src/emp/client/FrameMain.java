@@ -83,23 +83,32 @@ public class FrameMain extends JFrame {
     }
 
     private void search() {
-        //사용자가 입력한 검색어를 가져온다.
-        String str = start_F.getText().trim();
-        String ntr = end_F.getText().trim();
+
+        // 1. 사용자가 입력한 시작일과 종료일을 각각 받아와 앞뒤 공백을 제거한다.
+        String str = start_F.getText().trim(); // 시작일 텍스트필드 값
+        String ntr = end_F.getText().trim();   // 종료일 텍스트필드 값
+
+        // 2. 두 필드 모두 null이 아닌 경우에만 검색로직을 수행
         if (str != null && ntr != null) {
+            // 3. 검색조건을 담을 Map 객체 생성 (키: 파라미터명, 값: 입력값)
             Map<String, String> map = new HashMap<>();
-//        System.out.printf("Start : %d");
-
-
-            map.put("startDate", str);
-            map.put("endDate", ntr);
-
+//      System.out.printf("Start : %d"); // 예시로 남겨둔 주석, 사용 안함
+            map.put("startDate", str); // 4. 시작일을 맵에 저장
+            map.put("endDate", ntr);   // 5. 종료일을 맵에 저장
+            // 6. MyBatis의 SqlSession을 오픈 (커넥션 획득)
             SqlSession ss = factory.openSession();
+
+            // 7. emp.search 쿼리를 실행하며, map에 담긴 검색조건을 전달해 결과 리스트를 얻음
             List<EmpVO> list = ss.selectList("emp.search", map);
+
+            // 8. 검색 결과를 테이블에 표시하는 사용자 정의 메서드 호출
             viewTable(list);
+
+            // 9. 데이터베이스 세션 종료 (자원 반환)
             ss.close();
 
         }
+
     }
 
     private  void viewTable(List<EmpVO> list){
@@ -115,6 +124,7 @@ public class FrameMain extends JFrame {
             i++;
         }//for종료
         table.setModel(new DefaultTableModel(data, c_name));
+
     }
 
 
